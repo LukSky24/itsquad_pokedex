@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Itsquad\Pokedex\Test\Unit\Plugin;
 
+use Itsquad\Pokedex\Api\Data\PokemonInterface;
 use Itsquad\Pokedex\Api\PokemonApiInterface;
 use Itsquad\Pokedex\Plugin\PokemonApiLoggerPlugin;
 use PHPUnit\Framework\TestCase;
@@ -22,7 +23,7 @@ class PokemonApiLoggerPluginTest extends TestCase
 
     public function testAfterFetchPokemonDataLogsCorrectMessage(): void
     {
-        $result = ['name' => 'pikachu', 'id' => 25];
+        $result = [PokemonInterface::NAME => 'pikachu', PokemonInterface::ID => 25];
         $subjectMock = $this->createMock(PokemonApiInterface::class);
 
         $this->loggerMock->expects($this->once())
@@ -35,11 +36,11 @@ class PokemonApiLoggerPluginTest extends TestCase
     public function testAfterFetchPokemonDataReturnsResultUnchanged(): void
     {
         $result = [
-            'id' => 6,
-            'name' => 'charizard',
-            'height' => 17,
-            'weight' => 905,
-            'types' => ['fire', 'flying'],
+            PokemonInterface::ID => 6,
+            PokemonInterface::NAME => 'charizard',
+            PokemonInterface::HEIGHT => 17,
+            PokemonInterface::WEIGHT => 905,
+            PokemonInterface::TYPES => ['fire', 'flying'],
         ];
         $subjectMock = $this->createMock(PokemonApiInterface::class);
 
