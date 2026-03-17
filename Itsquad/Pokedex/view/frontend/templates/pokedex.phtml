@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+/** @var Pokedex $block */
+/** @var Escaper $escaper */
+
+use Itsquad\Pokedex\Block\Pokedex;
+use Magento\Framework\Escaper;
+
+?>
+<div class="pokedex-container">
+    <form class="form pokedex-search" action="<?= $escaper->escapeUrl($block->getSearchUrl()) ?>" method="get">
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= $escaper->escapeHtml(__('Pokedex')) ?></span></legend>
+            <div class="field pokemon-id required">
+                <label class="label" for="pokemon_id">
+                    <span><?= $escaper->escapeHtml(__('Pokemon ID')) ?></span>
+                </label>
+                <div class="control">
+                    <input name="pokemon_id"
+                           id="pokemon_id"
+                           title="<?= $escaper->escapeHtmlAttr(__('Pokemon ID')) ?>"
+                           class="input-text"
+                           type="number"
+                           min="1"
+                           required="required"/>
+                </div>
+            </div>
+        </fieldset>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="submit"
+                        title="<?= $escaper->escapeHtmlAttr(__('Szukaj')) ?>"
+                        class="action submit primary">
+                    <span><?= $escaper->escapeHtml(__('Szukaj')) ?></span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <?php if ($block->getError()): ?>
+        <div class="message error">
+            <span><?= $escaper->escapeHtml($block->getError()) ?></span>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($block->hasPokemon()):
+        $pokemon = $block->getPokemon();
+    ?>
+        <div class="pokedex-result">
+            <h2><?= $escaper->escapeHtml(ucfirst($pokemon->getName())) ?></h2>
+            <?php if ($pokemon->getSprite()): ?>
+                <img src="<?= $escaper->escapeUrl($pokemon->getSprite()) ?>"
+                     alt="<?= $escaper->escapeHtmlAttr($pokemon->getName()) ?>"/>
+            <?php endif; ?>
+            <table class="data table pokedex-info">
+                <tbody>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('ID')) ?></th>
+                        <td><?= (int) $pokemon->getId() ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Name')) ?></th>
+                        <td><?= $escaper->escapeHtml($pokemon->getName()) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Types')) ?></th>
+                        <td><?= $escaper->escapeHtml(implode(', ', $pokemon->getTypes())) ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Height')) ?></th>
+                        <td><?= (int) $pokemon->getHeight() ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Weight')) ?></th>
+                        <td><?= (int) $pokemon->getWeight() ?></td>
+                    </tr>
+                    <tr>
+                        <th><?= $escaper->escapeHtml(__('Base Experience')) ?></th>
+                        <td><?= (int) $pokemon->getBaseExperience() ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>

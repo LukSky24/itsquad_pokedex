@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Custom Logger: writes to var/log/pokemon.log -->
+    <virtualType name="Itsquad\Pokedex\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/pokemon.log</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Itsquad\Pokedex\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">Itsquad\Pokedex\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Interface preferences (Dependency Injection bindings) -->
+    <preference for="Itsquad\Pokedex\Api\PokemonRepositoryInterface"
+                type="Itsquad\Pokedex\Model\PokemonRepository"/>
+    <preference for="Itsquad\Pokedex\Api\Data\PokemonInterface"
+                type="Itsquad\Pokedex\Model\Pokemon"/>
+    <preference for="Itsquad\Pokedex\Api\PokemonApiInterface"
+                type="Itsquad\Pokedex\Service\PokeApiService"/>
+
+    <!-- Inject custom logger into the plugin -->
+    <type name="Itsquad\Pokedex\Plugin\PokemonApiLoggerPlugin">
+        <arguments>
+            <argument name="logger" xsi:type="object">Itsquad\Pokedex\Logger\Logger</argument>
+        </arguments>
+    </type>
+
+    <!-- Register the after plugin on PokemonApiInterface -->
+    <type name="Itsquad\Pokedex\Api\PokemonApiInterface">
+        <plugin name="Itsquad_Pokedex::pokemon_api_logger"
+                type="Itsquad\Pokedex\Plugin\PokemonApiLoggerPlugin"/>
+    </type>
+</config>
