@@ -5,13 +5,13 @@ declare(strict_types=1);
 namespace Itsquad\Pokedex\Plugin;
 
 use Itsquad\Pokedex\Api\Data\PokemonInterface;
-use Itsquad\Pokedex\Api\PokemonApiInterface;
+use Itsquad\Pokedex\Api\Service\PokemonApiInterface;
 use Psr\Log\LoggerInterface;
 
 class  PokemonApiLoggerPlugin
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $logger
     ) {
     }
 

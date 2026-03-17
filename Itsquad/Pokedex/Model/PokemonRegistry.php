@@ -6,7 +6,7 @@ namespace Itsquad\Pokedex\Model;
 
 use InvalidArgumentException;
 use Itsquad\Pokedex\Api\Data\PokemonInterface;
-use Itsquad\Pokedex\Api\PokemonApiInterface;
+use Itsquad\Pokedex\Api\Service\PokemonApiInterface;
 use Itsquad\Pokedex\Model\Data\PokemonFactory;
 
 class PokemonRegistry
@@ -36,20 +36,7 @@ class PokemonRegistry
             ->setTypes($rawData[PokemonInterface::TYPES])
             ->setSprite($rawData[PokemonInterface::SPRITE]);
 
-        $this->objectsRegistryById[$objectId] = $pokemon;
-
-        return $pokemon;
-    }
-
-    public function delete(int $objectId): bool
-    {
-        if (isset($this->objectsRegistryById[$objectId])) {
-            unset($this->objectsRegistryById[$objectId]);
-
-            return true;
-        }
-
-        return false;
+        return $this->push($pokemon);
     }
 
     public function push(PokemonInterface $object): PokemonInterface

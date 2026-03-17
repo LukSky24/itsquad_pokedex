@@ -47,6 +47,7 @@ use Magento\Framework\Escaper;
 
     <?php if ($block->hasPokemon()):
         $pokemon = $block->getPokemon();
+        $typesString = implode(', ', $pokemon->getTypes() ?? []);
     ?>
         <div class="pokedex-result">
             <h2><?= $escaper->escapeHtml(ucfirst($pokemon->getName())) ?></h2>
@@ -66,7 +67,7 @@ use Magento\Framework\Escaper;
                     </tr>
                     <tr>
                         <th><?= $escaper->escapeHtml(__('Types')) ?></th>
-                        <td><?= $escaper->escapeHtml(implode(', ', $pokemon->getTypes())) ?></td>
+                        <td><?= $escaper->escapeHtml($typesString) ?></td>
                     </tr>
                     <tr>
                         <th><?= $escaper->escapeHtml(__('Height')) ?></th>

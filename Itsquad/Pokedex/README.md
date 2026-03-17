@@ -21,9 +21,14 @@ This module demonstrates clean architecture principles and multiple design patte
 - **Benefits**: Easy to swap data sources (API, database, cache), testable
 
 ### 2. **Strategy Pattern**
-- **Files**: `Api/PokemonApiInterface.php`, `Service/PokeApiService.php`
+- **Files**: `Api/Service/PokemonApiInterface.php`, `Service/PokeApiService.php`
 - **Purpose**: Defines a family of interchangeable algorithms (API implementations)
 - **Benefits**: Open/Closed Principle - can add new API sources without modifying existing code
+
+### 2a. **Adapter Pattern**
+- **Files**: `Api/Client/PokeApiClientInterface.php`, `Client/GuzzlePokeApiClient.php`
+- **Purpose**: Wraps the external HTTP client (GuzzleHTTP) behind an interface, adapting it to the module's needs
+- **Benefits**: Swappable HTTP clients (e.g. replace Guzzle with cURL or Symfony HttpClient), Single Responsibility Principle (service handles data transformation, client handles HTTP), easier unit testing of each layer independently
 
 ### 3. **Data Transfer Object (DTO)**
 - **Files**: `Api/Data/PokemonInterface.php`, `Model/Data/Pokemon.php`
@@ -39,9 +44,8 @@ This module demonstrates clean architecture principles and multiple design patte
 - **File**: `Model/PokemonRegistry.php`
 - **Purpose**: In-memory cache for Pokemon objects retrieved from the API during a single request
 - **Methods**:
-  - `retrieve(int $objectId)` - Returns cached Pokemon or fetches from API, hydrates DTO, caches, and returns
+  - `retrieve(int $objectId)` - Returns cached Pokemon or fetches from API, hydrates DTO, caches via `push()`, and returns
   - `push(PokemonInterface $object)` - Manually adds a Pokemon to the cache
-  - `delete(int $objectId)` - Removes a Pokemon from the cache
 - **Benefits**: Avoids duplicate API calls for the same Pokemon within a request lifecycle
 
 ### 6. **Plugin Pattern (AOP)**

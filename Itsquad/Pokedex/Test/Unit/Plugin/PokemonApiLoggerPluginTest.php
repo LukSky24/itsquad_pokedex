@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Itsquad\Pokedex\Test\Unit\Plugin;
 
 use Itsquad\Pokedex\Api\Data\PokemonInterface;
-use Itsquad\Pokedex\Api\PokemonApiInterface;
+use Itsquad\Pokedex\Api\Service\PokemonApiInterface;
 use Itsquad\Pokedex\Plugin\PokemonApiLoggerPlugin;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
