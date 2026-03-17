@@ -22,7 +22,9 @@
                 type="Itsquad\Pokedex\Model\PokemonRepository"/>
     <preference for="Itsquad\Pokedex\Api\Data\PokemonInterface"
                 type="Itsquad\Pokedex\Model\Data\Pokemon"/>
-    <preference for="Itsquad\Pokedex\Api\PokemonApiInterface"
+    <preference for="Itsquad\Pokedex\Api\Client\PokeApiClientInterface"
+                type="Itsquad\Pokedex\Client\GuzzlePokeApiClient"/>
+    <preference for="Itsquad\Pokedex\Api\Service\PokemonApiInterface"
                 type="Itsquad\Pokedex\Service\PokeApiService"/>
 
     <!-- Inject custom logger into the plugin -->
@@ -33,7 +35,7 @@
     </type>
 
     <!-- Register the after plugin on PokemonApiInterface -->
-    <type name="Itsquad\Pokedex\Api\PokemonApiInterface">
+    <type name="Itsquad\Pokedex\Api\Service\PokemonApiInterface">
         <plugin name="Itsquad_Pokedex::pokemon_api_logger"
                 type="Itsquad\Pokedex\Plugin\PokemonApiLoggerPlugin"/>
     </type>

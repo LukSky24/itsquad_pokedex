@@ -1,17 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Itsquad\Pokedex\Api;
+namespace Itsquad\Pokedex\Api\Client;
 
 use InvalidArgumentException;
 
-interface PokemonApiInterface
+interface PokeApiClientInterface
 {
     /**
      * @param int $id
      * @return array
      * @throws InvalidArgumentException
      */
-    public function fetchPokemonData(int $id): array;
+    public function getPokemonById(int $id): array;
 }

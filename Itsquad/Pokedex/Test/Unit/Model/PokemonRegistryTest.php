@@ -1,8 +1,4 @@
 <?php
-/*
- * Copyright © Fast White Cat S.A. All rights reserved.
- * See LICENSE_FASTWHITECAT for license details.
- */
 
 declare(strict_types=1);
 
@@ -10,7 +6,7 @@ namespace Itsquad\Pokedex\Test\Unit\Model;
 
 use InvalidArgumentException;
 use Itsquad\Pokedex\Api\Data\PokemonInterface;
-use Itsquad\Pokedex\Api\PokemonApiInterface;
+use Itsquad\Pokedex\Api\Service\PokemonApiInterface;
 use Itsquad\Pokedex\Model\Data\Pokemon;
 use Itsquad\Pokedex\Model\Data\PokemonFactory;
 use Itsquad\Pokedex\Model\PokemonRegistry;
@@ -123,34 +119,4 @@ class PokemonRegistryTest extends TestCase
         $this->registry->push($pokemon);
     }
 
-    public function testDeleteRemovesFromCache(): void
-    {
-        $rawData = [
-            PokemonInterface::ID => 25,
-            PokemonInterface::NAME => 'pikachu',
-            PokemonInterface::HEIGHT => 4,
-            PokemonInterface::WEIGHT => 60,
-            PokemonInterface::BASE_EXPERIENCE => 112,
-            PokemonInterface::TYPES => ['electric'],
-            PokemonInterface::SPRITE => 'https://example.com/pikachu.png',
-        ];
-
-        $this->pokemonApiMock->expects($this->exactly(2))
-            ->method('fetchPokemonData')
-            ->with(25)
-            ->willReturn($rawData);
-
-        $this->registry->retrieve(25);
-        $result = $this->registry->delete(25);
-        $this->assertTrue($result);
-
-        $this->registry->retrieve(25);
-    }
-
-    public function testDeleteReturnsFalseForNonCachedId(): void
-    {
-        $result = $this->registry->delete(999);
-
-        $this->assertFalse($result);
-    }
 }

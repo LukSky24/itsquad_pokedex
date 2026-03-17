@@ -4,36 +4,24 @@ declare(strict_types=1);
 
 namespace Itsquad\Pokedex\Test\Unit\Service;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\ClientFactory;
-use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
+use Itsquad\Pokedex\Api\Client\PokeApiClientInterface;
 use Itsquad\Pokedex\Api\Data\PokemonInterface;
 use Itsquad\Pokedex\Service\PokeApiService;
-use Magento\Framework\Serialize\Serializer\Json;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-use RuntimeException;
 
 class PokeApiServiceTest extends TestCase
 {
-    private ClientFactory|MockObject $clientFactoryMock;
-    private Client|MockObject $clientMock;
-    private Json|MockObject $jsonMock;
+    private PokeApiClientInterface|MockObject $pokeApiClientMock;
     private PokeApiService $service;
 
     protected function setUp(): void
     {
-        $this->clientMock = $this->createMock(Client::class);
-        $this->clientFactoryMock = $this->createMock(ClientFactory::class);
-        $this->clientFactoryMock->method('create')->willReturn($this->clientMock);
-        $this->jsonMock = $this->createMock(Json::class);
+        $this->pokeApiClientMock = $this->createMock(PokeApiClientInterface::class);
 
         $this->service = new PokeApiService(
-            $this->clientFactoryMock,
-            $this->jsonMock,
+            $this->pokeApiClientMock,
         );
     }
 
@@ -54,7 +42,9 @@ class PokeApiServiceTest extends TestCase
             ],
         ];
 
-        $this->mockApiResponse($apiResponse);
+        $this->pokeApiClientMock->method('getPokemonById')
+            ->with(25)
+            ->willReturn($apiResponse);
 
         $result = $this->service->fetchPokemonData(25);
 
@@ -70,28 +60,37 @@ class PokeApiServiceTest extends TestCase
         );
     }
 
-    public function testFetchPokemonDataThrowsOnGuzzleError(): void
+    public function testFetchPokemonDataDefaultsBaseExperienceToZero(): void
     {
-        $exception = new class ('Connection refused') extends RuntimeException implements GuzzleException {
-        };
+        $apiResponse = [
+            'id' => 1,
+            'name' => 'bulbasaur',
+            'height' => 7,
+            'weight' => 69,
+            'types' => [],
+            'sprites' => ['front_default' => null],
+        ];
 
-        $this->clientMock->method('request')->willThrowException($exception);
+        $this->pokeApiClientMock->method('getPokemonById')
+            ->with(1)
+            ->willReturn($apiResponse);
+
+        $result = $this->service->fetchPokemonData(1);
+
+        $this->assertSame(0, $result[PokemonInterface::BASE_EXPERIENCE]);
+        $this->assertSame([], $result[PokemonInterface::TYPES]);
+        $this->assertNull($result[PokemonInterface::SPRITE]);
+    }
+
+    public function testFetchPokemonDataPropagatesClientException(): void
+    {
+        $this->pokeApiClientMock->method('getPokemonById')
+            ->with(999)
+            ->willThrowException(new InvalidArgumentException('Could not fetch Pokemon with ID: 999.'));
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessageMatches('/Could not fetch Pokemon with ID: 999/');
 
         $this->service->fetchPokemonData(999);
-    }
-
-    private function mockApiResponse(array $data): void
-    {
-        $streamMock = $this->createMock(StreamInterface::class);
-        $streamMock->method('getContents')->willReturn('json_body');
-
-        $responseMock = $this->createMock(ResponseInterface::class);
-        $responseMock->method('getBody')->willReturn($streamMock);
-
-        $this->clientMock->method('request')->willReturn($responseMock);
-        $this->jsonMock->method('unserialize')->with('json_body')->willReturn($data);
     }
 }
