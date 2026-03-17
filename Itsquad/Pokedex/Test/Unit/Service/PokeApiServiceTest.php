@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientFactory;
 use GuzzleHttp\Exception\GuzzleException;
 use InvalidArgumentException;
+use Itsquad\Pokedex\Api\Data\PokemonInterface;
 use Itsquad\Pokedex\Service\PokeApiService;
 use Magento\Framework\Serialize\Serializer\Json;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -57,15 +58,15 @@ class PokeApiServiceTest extends TestCase
 
         $result = $this->service->fetchPokemonData(25);
 
-        $this->assertSame(25, $result['id']);
-        $this->assertSame('pikachu', $result['name']);
-        $this->assertSame(4, $result['height']);
-        $this->assertSame(60, $result['weight']);
-        $this->assertSame(112, $result['base_experience']);
-        $this->assertSame(['electric'], $result['types']);
+        $this->assertSame(25, $result[PokemonInterface::ID]);
+        $this->assertSame('pikachu', $result[PokemonInterface::NAME]);
+        $this->assertSame(4, $result[PokemonInterface::HEIGHT]);
+        $this->assertSame(60, $result[PokemonInterface::WEIGHT]);
+        $this->assertSame(112, $result[PokemonInterface::BASE_EXPERIENCE]);
+        $this->assertSame(['electric'], $result[PokemonInterface::TYPES]);
         $this->assertSame(
             'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',
-            $result['sprite']
+            $result[PokemonInterface::SPRITE]
         );
     }
 

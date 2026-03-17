@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Itsquad\Pokedex\Plugin;
 
+use Itsquad\Pokedex\Api\Data\PokemonInterface;
 use Itsquad\Pokedex\Api\PokemonApiInterface;
 use Psr\Log\LoggerInterface;
 
@@ -24,7 +25,7 @@ class  PokemonApiLoggerPlugin
     public function afterFetchPokemonData(PokemonApiInterface $subject, array $result, int $id): array
     {
         $this->logger->info(
-            sprintf('Query: %d - Result: %s', $id, $result['name'] ?? 'unknown')
+            sprintf('Query: %d - Result: %s', $id, $result[PokemonInterface::NAME] ?? 'unknown')
         );
 
         return $result;

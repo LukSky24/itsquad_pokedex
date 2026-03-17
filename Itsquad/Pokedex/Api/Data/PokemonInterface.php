@@ -6,6 +6,14 @@ namespace Itsquad\Pokedex\Api\Data;
 
 interface PokemonInterface
 {
+    public const ID = 'id';
+    public const NAME = 'name';
+    public const HEIGHT = 'height';
+    public const WEIGHT = 'weight';
+    public const BASE_EXPERIENCE = 'base_experience';
+    public const TYPES = 'types';
+    public const SPRITE = 'sprite';
+
     /**
      * @return int
      */

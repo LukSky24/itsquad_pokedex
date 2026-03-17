@@ -21,7 +21,7 @@
     <preference for="Itsquad\Pokedex\Api\PokemonRepositoryInterface"
                 type="Itsquad\Pokedex\Model\PokemonRepository"/>
     <preference for="Itsquad\Pokedex\Api\Data\PokemonInterface"
-                type="Itsquad\Pokedex\Model\Pokemon"/>
+                type="Itsquad\Pokedex\Model\Data\Pokemon"/>
     <preference for="Itsquad\Pokedex\Api\PokemonApiInterface"
                 type="Itsquad\Pokedex\Service\PokeApiService"/>
 

@@ -6,6 +6,8 @@ namespace Itsquad\Pokedex\Service;
 
 use GuzzleHttp\ClientFactory;
 use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
+use Itsquad\Pokedex\Api\Data\PokemonInterface;
 use Itsquad\Pokedex\Api\PokemonApiInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 
@@ -28,19 +30,19 @@ class PokeApiService implements PokemonApiInterface
             $data = $this->json->unserialize($body);
 
             return [
-                'id' => $data['id'],
-                'name' => $data['name'],
-                'height' => $data['height'],
-                'weight' => $data['weight'],
-                'base_experience' => $data['base_experience'] ?? 0,
-                'types' => array_map(
+                PokemonInterface::ID => $data['id'],
+                PokemonInterface::NAME => $data['name'],
+                PokemonInterface::HEIGHT => $data['height'],
+                PokemonInterface::WEIGHT => $data['weight'],
+                PokemonInterface::BASE_EXPERIENCE => $data['base_experience'] ?? 0,
+                PokemonInterface::TYPES => array_map(
                     static fn(array $typeEntry): string => $typeEntry['type']['name'],
                     $data['types'] ?? []
                 ),
-                'sprite' => $data['sprites']['front_default'] ?? null,
+                PokemonInterface::SPRITE => $data['sprites']['front_default'] ?? null,
             ];
         } catch (GuzzleException $e) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Could not fetch Pokemon with ID: ' . $id . '. ' . $e->getMessage()
             );
         }
